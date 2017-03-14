@@ -1,4 +1,6 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
+var ReactDOMServer = require('react-dom/server');
 
 // Stateless Functional Component
 var ErrorModal = React.createClass({
@@ -12,13 +14,8 @@ var ErrorModal = React.createClass({
     message: React.PropTypes.string.isRequired // but message is required and must be a string type
   },
   componentDidMount: function () {
-    var modal = new Foundation.Reveal($('#error_modal'));
-    modal.open();
-  },
-  render: function () {
     var { title, message } = this.props;
-    
-    return (
+    var modalMarkup = (
       <div
         id="error_modal"
         className="reveal tiny text-center"
@@ -31,6 +28,18 @@ var ErrorModal = React.createClass({
           <button className="button hollow" data-close="">Okay</button>
         </p>
       </div>
+    );
+
+    var $modal = $(ReactDOMServer.renderToString(modalMarkup));
+
+    $(ReactDOM.findDOMNode(this)).html($modal);
+
+    var modal = new Foundation.Reveal($('#error_modal'));
+    modal.open();
+  },
+  render: function () {
+    return (
+      <div></div>
     );
   }
 });
